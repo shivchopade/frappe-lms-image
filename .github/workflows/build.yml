@@ -12,10 +12,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Get frappe_docker
-        run: git clone --depth 1 https://github.com/frappe/frappe_docker
+      - name: Get Railway template
+        run: git clone --depth 1 https://github.com/harshtandiya/frappe_railway
 
       - name: Image name (lowercase)
         id: img
@@ -31,12 +29,8 @@ jobs:
 
       - uses: docker/build-push-action@v6
         with:
-          context: frappe_docker
-          file: frappe_docker/images/layered/Containerfile
+          context: frappe_railway/frappe
           build-args: |
-            FRAPPE_BRANCH=version-16
-          secret-files: |
-            apps_json=apps.json
+            FRAPPE_APPS=https://github.com/frappe/payments@version-16,https://github.com/frappe/lms@main
           push: true
           tags: ${{ steps.img.outputs.name }}
-          
